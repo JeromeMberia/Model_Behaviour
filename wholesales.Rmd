@@ -1,0 +1,91 @@
+---
+title: "R Notebook"
+output: rmarkdown::github_document
+---
+
+```{r}
+library(readr)
+customers_data_2 <- read_csv("C:/Users/Admin/Downloads/Wholesale customers data.csv")
+customers_data <- customers_data_2
+head(customers_data)
+```
+
+```{r}
+tail(customers_data)
+```
+
+```{r}
+
+str(customers_data)
+```
+
+```{r}
+summary(customers_data)
+```
+
+```{r}
+is.null(customers_data)
+```
+
+```{r}
+anyDuplicated(customers_data)
+```
+
+```{r}
+# install.packages("magrittr") # package installations are only needed the first time you use it
+# install.packages("dplyr")    # alternative installation of the %>%
+library(magrittr) # needs to be run every time you start R and want to use %>%
+library(dplyr)    # alternatively, this also loads %>%
+```
+
+```{r}
+names(customers_data[, 1])
+```
+
+
+```{r}
+Numeric<- customers_data %>% select_if(is.numeric)
+for (i in 1:ncol(Numeric)) {
+  boxplot(customers_data[, i], main=names(customers_data[, i]))
+}
+```
+
+  
+```{r}
+customers_data <- as.tbl(customers_data)
+head(customers_data)
+```
+
+
+
+```{r}
+customers_data$Channel <- as.character(customers_data$Channel)
+
+customers_data$Channel[customers_data$Channel == "1"] <- "restaurant"
+customers_data$Channel[customers_data$Channel == "2"] <- "retail"
+```
+
+```{r}
+customers_data$Region <- as.character(customers_data$Region)
+
+customers_data$Region[customers_data$Region == "1"] <- "Lisbon"
+customers_data$Region[customers_data$Region == "2"] <- "Porto"
+customers_data$Region[customers_data$Region == "3"] <- "Other region"
+```
+
+
+
+```{r}
+customers_data$Region
+```
+
+```{r}
+colMeans(customers_data)
+```
+
+```{r}
+
+
+
+```
+
