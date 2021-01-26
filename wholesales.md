@@ -49,6 +49,17 @@ tail(customers_data)
     ## 6       1      3  2787  1698    2510     65              477         52
 
 ``` r
+# Checking all column names
+
+names(customers_data)
+```
+
+    ## [1] "Channel"          "Region"           "Fresh"            "Milk"            
+    ## [5] "Grocery"          "Frozen"           "Detergents_Paper" "Delicassen"
+
+``` r
+# Checking the data types of each column
+
 str(customers_data)
 ```
 
@@ -93,12 +104,27 @@ summary(customers_data)
     ##  Max.   :92780   Max.   :60869.0   Max.   :40827.0   Max.   :47943.0
 
 ``` r
+# Checking the number of unique values in each column
+
+lengths(lapply(customers_data, unique))
+```
+
+    ##          Channel           Region            Fresh             Milk 
+    ##                2                3              433              421 
+    ##          Grocery           Frozen Detergents_Paper       Delicassen 
+    ##              430              426              417              403
+
+``` r
+# Checking for null values
+
 is.null(customers_data)
 ```
 
     ## [1] FALSE
 
 ``` r
+# Checking for Duplicate records
+
 anyDuplicated(customers_data)
 ```
 
@@ -127,6 +153,12 @@ names(customers_data[, 1])
 ```
 
     ## [1] "Channel"
+
+``` r
+customers_data[, is.numeric(customers_data)]
+```
+
+    ## # A tibble: 440 x 0
 
 ``` r
 num.cols <- unlist(lapply(customers_data, is.numeric))         
@@ -160,35 +192,18 @@ data.num
     ## # ... with 430 more rows
 
 ``` r
+# Creating a variable with only numeric attributes
+
+data.num <- customers_data[ , unlist(lapply(customers_data, is.numeric))]
+
+
+# Boxplot loop
 for (i in 1:ncol(data.num)) {
   boxplot(data.num[, i], main=names(data.num[, i]))
 }
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-9-7.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-9-8.png)<!-- -->
-
-``` r
-customers_data <- as.tbl(customers_data)
-```
-
-    ## Warning: `as.tbl()` is deprecated as of dplyr 1.0.0.
-    ## Please use `tibble::as_tibble()` instead.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
-
-``` r
-head(customers_data)
-```
-
-    ## # A tibble: 6 x 8
-    ##   Channel Region Fresh  Milk Grocery Frozen Detergents_Paper Delicassen
-    ##     <dbl>  <dbl> <dbl> <dbl>   <dbl>  <dbl>            <dbl>      <dbl>
-    ## 1       2      3 12669  9656    7561    214             2674       1338
-    ## 2       2      3  7057  9810    9568   1762             3293       1776
-    ## 3       2      3  6353  8808    7684   2405             3516       7844
-    ## 4       1      3 13265  1196    4221   6404              507       1788
-    ## 5       2      3 22615  5410    7198   3915             1777       5185
-    ## 6       2      3  9413  8259    5126    666             1795       1451
+![](wholesales_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-13-3.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-13-4.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-13-5.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-13-6.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-13-7.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-13-8.png)<!-- -->
 
 ``` r
 customers_data$Channel <- as.character(customers_data$Channel)
@@ -206,195 +221,393 @@ customers_data$Region[customers_data$Region == "3"] <- "Other region"
 ```
 
 ``` r
-customers_data$Region
+# Calculating the mean for all numeric columns
+
+colMeans(data.num)
 ```
 
-    ##   [1] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##   [6] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [11] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [16] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [21] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [26] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [31] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [36] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [41] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [46] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [51] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [56] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [61] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [66] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [71] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [76] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [81] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [86] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [91] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ##  [96] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [101] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [106] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [111] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [116] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [121] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [126] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [131] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [136] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [141] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [146] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [151] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [156] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [161] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [166] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [171] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [176] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [181] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [186] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [191] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [196] "Other region" "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [201] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [206] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [211] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [216] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [221] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [226] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [231] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [236] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [241] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [246] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [251] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [256] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [261] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [266] "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"       "Lisbon"      
-    ## [271] "Lisbon"       "Lisbon"       "Lisbon"       "Other region" "Other region"
-    ## [276] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [281] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [286] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [291] "Other region" "Other region" "Other region" "Porto"        "Porto"       
-    ## [296] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [301] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [306] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [311] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [316] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [321] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [326] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [331] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [336] "Porto"        "Porto"        "Porto"        "Porto"        "Porto"       
-    ## [341] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [346] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [351] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [356] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [361] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [366] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [371] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [376] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [381] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [386] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [391] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [396] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [401] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [406] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [411] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [416] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [421] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [426] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [431] "Other region" "Other region" "Other region" "Other region" "Other region"
-    ## [436] "Other region" "Other region" "Other region" "Other region" "Other region"
+    ##          Channel           Region            Fresh             Milk 
+    ##         1.322727         2.543182     12000.297727      5796.265909 
+    ##          Grocery           Frozen Detergents_Paper       Delicassen 
+    ##      7951.277273      3071.931818      2881.493182      1524.870455
 
 ``` r
-#colMeans(customers_data)
+for (i in 1:ncol(data.num)) {
+  data.num[, i] <- as.numeric(unlist(data.num[, i]))
+}
 ```
 
 ``` r
-#var(customers_data)
-
-
-vec_new <- gsub(" ", "", customers_data$Region)
-vec_new
+median(as.numeric(unlist(data.num[, 1])))
 ```
 
-    ##   [1] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##   [6] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [11] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [16] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [21] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [26] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [31] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [36] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [41] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [46] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [51] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [56] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [61] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [66] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [71] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [76] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [81] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [86] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [91] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ##  [96] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [101] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [106] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [111] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [116] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [121] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [126] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [131] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [136] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [141] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [146] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [151] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [156] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [161] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [166] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [171] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [176] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [181] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [186] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [191] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [196] "Otherregion" "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [201] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [206] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [211] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [216] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [221] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [226] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [231] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [236] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [241] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [246] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [251] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [256] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [261] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [266] "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"      "Lisbon"     
-    ## [271] "Lisbon"      "Lisbon"      "Lisbon"      "Otherregion" "Otherregion"
-    ## [276] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [281] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [286] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [291] "Otherregion" "Otherregion" "Otherregion" "Porto"       "Porto"      
-    ## [296] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [301] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [306] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [311] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [316] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [321] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [326] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [331] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [336] "Porto"       "Porto"       "Porto"       "Porto"       "Porto"      
-    ## [341] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [346] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [351] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [356] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [361] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [366] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [371] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [376] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [381] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [386] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [391] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [396] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [401] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [406] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [411] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [416] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [421] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [426] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [431] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
-    ## [436] "Otherregion" "Otherregion" "Otherregion" "Otherregion" "Otherregion"
+    ## [1] 1
+
+``` r
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(median(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+    ## [1] "Channel"
+    ## [1] 1
+    ## [1] "**************"
+    ## [1] "Region"
+    ## [1] 3
+    ## [1] "**************"
+    ## [1] "Fresh"
+    ## [1] 8504
+    ## [1] "**************"
+    ## [1] "Milk"
+    ## [1] 3627
+    ## [1] "**************"
+    ## [1] "Grocery"
+    ## [1] 4755.5
+    ## [1] "**************"
+    ## [1] "Frozen"
+    ## [1] 1526
+    ## [1] "**************"
+    ## [1] "Detergents_Paper"
+    ## [1] 816.5
+    ## [1] "**************"
+    ## [1] "Delicassen"
+    ## [1] 965.5
+    ## [1] "**************"
+
+``` r
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+```
+
+``` r
+for (i in 1:ncol(customers_data)) {
+  print(names(customers_data[, i]))
+  print(getmode(customers_data[, i]))
+}
+```
+
+    ## [1] "Channel"
+    ## # A tibble: 2 x 1
+    ##   Channel   
+    ##   <chr>     
+    ## 1 retail    
+    ## 2 restaurant
+    ## [1] "Region"
+    ## # A tibble: 3 x 1
+    ##   Region      
+    ##   <chr>       
+    ## 1 Other region
+    ## 2 Lisbon      
+    ## 3 Porto       
+    ## [1] "Fresh"
+    ## # A tibble: 433 x 1
+    ##    Fresh
+    ##    <dbl>
+    ##  1 12669
+    ##  2  7057
+    ##  3  6353
+    ##  4 13265
+    ##  5 22615
+    ##  6  9413
+    ##  7 12126
+    ##  8  7579
+    ##  9  5963
+    ## 10  6006
+    ## # ... with 423 more rows
+    ## [1] "Milk"
+    ## # A tibble: 421 x 1
+    ##     Milk
+    ##    <dbl>
+    ##  1  9656
+    ##  2  9810
+    ##  3  8808
+    ##  4  1196
+    ##  5  5410
+    ##  6  8259
+    ##  7  3199
+    ##  8  4956
+    ##  9  3648
+    ## 10 11093
+    ## # ... with 411 more rows
+    ## [1] "Grocery"
+    ## # A tibble: 430 x 1
+    ##    Grocery
+    ##      <dbl>
+    ##  1    7561
+    ##  2    9568
+    ##  3    7684
+    ##  4    4221
+    ##  5    7198
+    ##  6    5126
+    ##  7    6975
+    ##  8    9426
+    ##  9    6192
+    ## 10   18881
+    ## # ... with 420 more rows
+    ## [1] "Frozen"
+    ## # A tibble: 426 x 1
+    ##    Frozen
+    ##     <dbl>
+    ##  1    214
+    ##  2   1762
+    ##  3   2405
+    ##  4   6404
+    ##  5   3915
+    ##  6    666
+    ##  7    480
+    ##  8   1669
+    ##  9    425
+    ## 10   1159
+    ## # ... with 416 more rows
+    ## [1] "Detergents_Paper"
+    ## # A tibble: 417 x 1
+    ##    Detergents_Paper
+    ##               <dbl>
+    ##  1             2674
+    ##  2             3293
+    ##  3             3516
+    ##  4              507
+    ##  5             1777
+    ##  6             1795
+    ##  7             3140
+    ##  8             3321
+    ##  9             1716
+    ## 10             7425
+    ## # ... with 407 more rows
+    ## [1] "Delicassen"
+    ## # A tibble: 403 x 1
+    ##    Delicassen
+    ##         <dbl>
+    ##  1       1338
+    ##  2       1776
+    ##  3       7844
+    ##  4       1788
+    ##  5       5185
+    ##  6       1451
+    ##  7        545
+    ##  8       2566
+    ##  9        750
+    ## 10       2098
+    ## # ... with 393 more rows
+
+``` r
+# install.packages("matrixStats")
+library(matrixStats)
+```
+
+    ## 
+    ## Attaching package: 'matrixStats'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     count
+
+``` r
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(min(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+    ## [1] "Channel"
+    ## [1] 1
+    ## [1] "**************"
+    ## [1] "Region"
+    ## [1] 1
+    ## [1] "**************"
+    ## [1] "Fresh"
+    ## [1] 3
+    ## [1] "**************"
+    ## [1] "Milk"
+    ## [1] 55
+    ## [1] "**************"
+    ## [1] "Grocery"
+    ## [1] 3
+    ## [1] "**************"
+    ## [1] "Frozen"
+    ## [1] 25
+    ## [1] "**************"
+    ## [1] "Detergents_Paper"
+    ## [1] 3
+    ## [1] "**************"
+    ## [1] "Delicassen"
+    ## [1] 3
+    ## [1] "**************"
+
+``` r
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(max(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+    ## [1] "Channel"
+    ## [1] 2
+    ## [1] "**************"
+    ## [1] "Region"
+    ## [1] 3
+    ## [1] "**************"
+    ## [1] "Fresh"
+    ## [1] 112151
+    ## [1] "**************"
+    ## [1] "Milk"
+    ## [1] 73498
+    ## [1] "**************"
+    ## [1] "Grocery"
+    ## [1] 92780
+    ## [1] "**************"
+    ## [1] "Frozen"
+    ## [1] 60869
+    ## [1] "**************"
+    ## [1] "Detergents_Paper"
+    ## [1] 40827
+    ## [1] "**************"
+    ## [1] "Delicassen"
+    ## [1] 47943
+    ## [1] "**************"
+
+``` r
+lapply(data.num,FUN=quantile)
+```
+
+    ## $Channel
+    ##   0%  25%  50%  75% 100% 
+    ##    1    1    1    2    2 
+    ## 
+    ## $Region
+    ##   0%  25%  50%  75% 100% 
+    ##    1    2    3    3    3 
+    ## 
+    ## $Fresh
+    ##        0%       25%       50%       75%      100% 
+    ##      3.00   3127.75   8504.00  16933.75 112151.00 
+    ## 
+    ## $Milk
+    ##       0%      25%      50%      75%     100% 
+    ##    55.00  1533.00  3627.00  7190.25 73498.00 
+    ## 
+    ## $Grocery
+    ##       0%      25%      50%      75%     100% 
+    ##     3.00  2153.00  4755.50 10655.75 92780.00 
+    ## 
+    ## $Frozen
+    ##       0%      25%      50%      75%     100% 
+    ##    25.00   742.25  1526.00  3554.25 60869.00 
+    ## 
+    ## $Detergents_Paper
+    ##       0%      25%      50%      75%     100% 
+    ##     3.00   256.75   816.50  3922.00 40827.00 
+    ## 
+    ## $Delicassen
+    ##       0%      25%      50%      75%     100% 
+    ##     3.00   408.25   965.50  1820.25 47943.00
+
+``` r
+# Checking the range for all numeric columns
+
+lapply(data.num,FUN=range)
+```
+
+    ## $Channel
+    ## [1] 1 2
+    ## 
+    ## $Region
+    ## [1] 1 3
+    ## 
+    ## $Fresh
+    ## [1]      3 112151
+    ## 
+    ## $Milk
+    ## [1]    55 73498
+    ## 
+    ## $Grocery
+    ## [1]     3 92780
+    ## 
+    ## $Frozen
+    ## [1]    25 60869
+    ## 
+    ## $Detergents_Paper
+    ## [1]     3 40827
+    ## 
+    ## $Delicassen
+    ## [1]     3 47943
+
+``` r
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(var(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+    ## [1] "Channel"
+    ## [1] 0.2190723
+    ## [1] "**************"
+    ## [1] "Region"
+    ## [1] 0.5994978
+    ## [1] "**************"
+    ## [1] "Fresh"
+    ## [1] 159954927
+    ## [1] "**************"
+    ## [1] "Milk"
+    ## [1] 54469967
+    ## [1] "**************"
+    ## [1] "Grocery"
+    ## [1] 90310104
+    ## [1] "**************"
+    ## [1] "Frozen"
+    ## [1] 23567853
+    ## [1] "**************"
+    ## [1] "Detergents_Paper"
+    ## [1] 22732436
+    ## [1] "**************"
+    ## [1] "Delicassen"
+    ## [1] 7952997
+    ## [1] "**************"
+
+``` r
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(sd(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+    ## [1] "Channel"
+    ## [1] 0.4680516
+    ## [1] "**************"
+    ## [1] "Region"
+    ## [1] 0.7742724
+    ## [1] "**************"
+    ## [1] "Fresh"
+    ## [1] 12647.33
+    ## [1] "**************"
+    ## [1] "Milk"
+    ## [1] 7380.377
+    ## [1] "**************"
+    ## [1] "Grocery"
+    ## [1] 9503.163
+    ## [1] "**************"
+    ## [1] "Frozen"
+    ## [1] 4854.673
+    ## [1] "**************"
+    ## [1] "Detergents_Paper"
+    ## [1] 4767.854
+    ## [1] "**************"
+    ## [1] "Delicassen"
+    ## [1] 2820.106
+    ## [1] "**************"
+
+``` r
+for (i in 1:ncol(data.num)) {
+  hist(as.numeric(unlist(data.num[, i])))
+}
+```
+
+![](wholesales_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-29-2.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-29-3.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-29-4.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-29-5.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-29-6.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-29-7.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-29-8.png)<!-- -->

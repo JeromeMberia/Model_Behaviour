@@ -15,6 +15,14 @@ tail(customers_data)
 ```
 
 ```{r}
+# Checking all column names
+
+names(customers_data)
+```
+
+
+```{r}
+# Checking the data types of each column
 
 str(customers_data)
 ```
@@ -22,12 +30,22 @@ str(customers_data)
 ```{r}
 summary(customers_data)
 ```
+```{r}
+# Checking the number of unique values in each column
+
+lengths(lapply(customers_data, unique))
+```
+
 
 ```{r}
+# Checking for null values
+
 is.null(customers_data)
 ```
 
 ```{r}
+# Checking for Duplicate records
+
 anyDuplicated(customers_data)
 ```
 
@@ -42,6 +60,10 @@ library(dplyr)    # alternatively, this also loads %>%
 names(customers_data[, 1])
 ```
 
+```{r}
+customers_data[, is.numeric(customers_data)]
+```
+
 
 ```{r}
 num.cols <- unlist(lapply(customers_data, is.numeric))         
@@ -50,16 +72,20 @@ num.cols
 # -num.cols- being a condition
 data.num <- customers_data[ , num.cols]                        
 data.num 
+```
 
+
+```{r}
+# Creating a variable with only numeric attributes
+
+data.num <- customers_data[ , unlist(lapply(customers_data, is.numeric))]
+
+
+# Boxplot loop
 for (i in 1:ncol(data.num)) {
   boxplot(data.num[, i], main=names(data.num[, i]))
 }
-```
 
-  
-```{r}
-customers_data <- as.tbl(customers_data)
-head(customers_data)
 ```
 
 
@@ -82,23 +108,103 @@ customers_data$Region[customers_data$Region == "3"] <- "Other region"
 
 
 ```{r}
-customers_data$Region
+# Calculating the mean for all numeric columns
+
+colMeans(data.num)
 ```
 
 ```{r}
-#colMeans(customers_data)
+for (i in 1:ncol(data.num)) {
+  data.num[, i] <- as.numeric(unlist(data.num[, i]))
+}
 ```
 
 ```{r}
-#var(customers_data)
+median(as.numeric(unlist(data.num[, 1])))
+```
 
 
-vec_new <- gsub(" ", "", customers_data$Region)
-vec_new
+
+```{r}
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(median(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+
+```{r}
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+```
+
+```{r}
+for (i in 1:ncol(customers_data)) {
+  print(names(customers_data[, i]))
+  print(getmode(customers_data[, i]))
+}
+```
+
+```{r}
+# install.packages("matrixStats")
+library(matrixStats)
+```
+```{r}
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(min(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+
+```{r}
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(max(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+
+```{r}
+lapply(data.num,FUN=quantile)
 ```
 
 ```{r}
 
+# Checking the range for all numeric columns
+
+lapply(data.num,FUN=range)
 ```
+
+```{r}
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(var(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+```{r}
+for (i in 1:ncol(data.num)) {
+  print(names(as.vector(data.num[, i])))
+  print(sd(as.numeric(unlist(data.num[, i]))))
+  print("**************")
+}
+```
+
+```{r}
+for (i in 1:ncol(data.num)) {
+  hist(as.numeric(unlist(data.num[, i])))
+}
+```
+
+
+
+
 
 
