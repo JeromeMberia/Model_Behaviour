@@ -2,209 +2,531 @@
 title: "R Notebook"
 output: rmarkdown::github_document
 ---
-
+### Importing and reading dataset
 ```{r}
 library(readr)
-customers_data_2 <- read_csv("C:/Users/Admin/Downloads/Wholesale customers data.csv")
-customers_data <- customers_data_2
+customers_data_2<- read_csv("C:/Users/Admin/Downloads/Wholesale customers data.csv")
+#
+# making dataframe copy
+customers_data<-customers_data_2
+#
+#checking the fist 6 rows of the dataset.
 head(customers_data)
 ```
 
+### checking the bottom rows of the dataset
 ```{r}
 tail(customers_data)
 ```
-
-```{r}
-# Checking all column names
-
-names(customers_data)
-```
-
-
-```{r}
-# Checking the data types of each column
-
-str(customers_data)
-```
-
+### getting the dataset summary
 ```{r}
 summary(customers_data)
 ```
+### checking datatypes 
 ```{r}
-# Checking the number of unique values in each column
-
-lengths(lapply(customers_data, unique))
+str(customers_data)
 ```
-
-
+### converting the data into a tibble for easy manupulation
 ```{r}
-# Checking for null values
-
+library(caret)
+library(tibble)
+#For ease in analysis,we convert the data into a tibble
+customers_data<-as_tibble(customers_data) # there is suggestion to use as_tibble instead of as.tibble.
+head(customers_data)
+```
+##. Data cleaning
+```{r}
+#checking the missing values
 is.null(customers_data)
 ```
-
 ```{r}
-# Checking for Duplicate records
-
+# checking for duplicates 
 anyDuplicated(customers_data)
 ```
-
+### checking for outliers
+### installing the packages.
 ```{r}
 # install.packages("magrittr") # package installations are only needed the first time you use it
 # install.packages("dplyr")    # alternative installation of the %>%
 library(magrittr) # needs to be run every time you start R and want to use %>%
 library(dplyr)    # alternatively, this also loads %>%
 ```
-
+## converting some clunms to categorical datatypes.
+channel and Region are categorical in nature and not numerical, they have already been encoded to make them easier to work with. We will convert them to their appropriate data type.
 ```{r}
-names(customers_data[, 1])
+##converting colunms to categorical datatypes
+#
+customers_df <-customers_data
+customers_df$Channel  <- as.factor(customers_df$Channel)
+customers_df$Region <- as.factor(customers_df$Region)
 ```
-
+##confirming the datatype changes
 ```{r}
-customers_data[, is.numeric(customers_data)]
+# confirming the data types changes
+str(customers_df)
 ```
-
-
+the two variables has been transformed to categorical datatype. 
+###3.2a Identifying the numeric class in the data and evaluating if there are any outliers
 ```{r}
-num.cols <- unlist(lapply(customers_data, is.numeric))         
-num.cols
-
-# -num.cols- being a condition
-data.num <- customers_data[ , num.cols]                        
-data.num 
+#
+#Checking the data types of the columns
+#
+data.num<- customers_df %>% select_if(is.numeric)
+data.num
 ```
-
-
+### checking for outliers
 ```{r}
-# Creating a variable with only numeric attributes
-
-data.num <- customers_data[ , unlist(lapply(customers_data, is.numeric))]
-
-
-# Boxplot loop
 for (i in 1:ncol(data.num)) {
   boxplot(data.num[, i], main=names(data.num[, i]))
 }
-
 ```
-
-
-
+observation: all variables has outlies. However we will not dop them as they look genuine.
+### renaming the rows of the channel, and region for analysis purpose.
 ```{r}
-customers_data$Channel <- as.character(customers_data$Channel)
-
-customers_data$Channel[customers_data$Channel == "1"] <- "restaurant"
-customers_data$Channel[customers_data$Channel == "2"] <- "retail"
+library(caret)
+library(lattice)
+#customers_data$Channel <- as.factor(customers_data$Channel)
+#customers_data$Channel[customers_data$Channel == "1"] <- "restaurant"
+#customers_data$Channel[customers_data$Channel == "2"] <- "retail"
 ```
-
 ```{r}
-customers_data$Region <- as.character(customers_data$Region)
-
-customers_data$Region[customers_data$Region == "1"] <- "Lisbon"
-customers_data$Region[customers_data$Region == "2"] <- "Porto"
-customers_data$Region[customers_data$Region == "3"] <- "Other region"
+#customers_data$Region <- as.factor(customers_data$Region)
+#customers_data$Region[customers_data$Region == "1"] <- "Lisbon"
+#customers_data$Region[customers_data$Region == "2"] <- "Porto"
+#customers_data$Region[customers_data$Region == "3"] <- "Other region"
 ```
-
-
-
+###renaming colunms for analysis purpose
 ```{r}
-# Calculating the mean for all numeric columns
-
-colMeans(data.num)
+library(dplyr)
+customers_df$Channel <- with(customers_data,  factor(Channel, levels = c(1,2),labels = c("restaurant", "retail")))
+customers_df$Region <- with(customers_data,  factor(Region, levels = c(1,2,3), labels = c("Lisbon", "Porto", "Other region")))
+head(customers_df)
 ```
-
+### confirming the rowname changes.
+```{r}
+customers_df$Region
+```
+###checking dataset summary after data cleaning
+```{r}
+# getting the main summary
+summary(customers_df)
+```
+##getting the dataset description
+```{r}
+library(psych)
+describe(customers_df)
+```
+observation: it gives us the a glimpse of the mean,variance,max and so on.
+## Univariate Analysis
+### univariate Analysis for Numerical data
+```{r}
+#preview of the numerical colunms
+#
+library(dplyr)    # alternatively, this also loads %>%
+head(data.num)
+```
+### previewing the numerical variables using histograms to check skewness.
+```{r}
+#3.3ai installing ggplot2 package for visualization.
+#install.packages('ggplot2')
+#
+#installing ggplot2 library
+#
+library(ggplot2)
+#
+#note: the above  have been installed in the console section.
+```
+```{r}
+#visualizing the Fresh  colunm to check for skewness
+#
+qplot(data = customers_df, x = Fresh)
+```
+```{r}
+#visualizing the milk colunm to check for skewness
+#
+qplot(data = customers_df, x = Milk,)
+```
+```{r}
+#visualizing the grocery  colunm to check for skewness
+#
+qplot(data = customers_df, x = Grocery)
+```
+```{r}
+#visualizing the Frozen  colunm to check for skewness
+#
+qplot(data = customers_df, x = Frozen)
+```
+```{r}
+#visualizing the Detergents_Paper colunm to check for skewness
+#
+qplot(data = customers_df, x = Detergents_Paper)
+```
+```{r}
+#visualizing the Delicassen  column to check for skewness
+#
+qplot(data = customers_data, x = Delicassen)
+```
+observation: All our numerical variables have are positively skewed.
+### we can check skewness for numerical values at once as below
+```{r}
+## we can check skewness for numerical values at once as below
+library(caret)
+library(ggplot2)
+library(dplyr)    # alternatively, this also loads %>%
+library(tidyr)
+customers_df%>%
+  gather(attributes, value, 3:8) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(fill = 'lightblue2', color = 'black') +
+  facet_wrap(~attributes, scales = 'free_x') +
+  labs(x="Values", y="Frequency") +
+  theme_bw()
+```
+observation: shows skewness to the right(positive skewness).
+### 4.1b univariate Analysis for categorical Data
+```{r}
+## Identifying the categorical class in the data 
+#
+df_cat<- customers_df %>% select_if(is.factor)
+df_cat
+```
+## creating tables for bar plots.
+```{r}
+# create tables of all categorical variables to be able to create bar plots with them
+Channel_table <- table(customers_df$Channel)
+Region_table <- table(customers_df$Region)
+```
+### adjusting plot size bf plotting.
+```{r}
+# function for adjusting plot size
+set_plot_dimensions <- function(width_choice, height_choice) {
+    options(repr.plot.width = width_choice, repr.plot.height = height_choice)
+}
+```
+```{r}
+# barplot of Month
+set_plot_dimensions(5, 4)
+Channel_table
+barplot(Channel_table, ylab = "count", xlab="Channel", col="dark red")
+```
+observation: restaurant has more records compared to retail variable. 
+```{r}
+# barplot of Month
+set_plot_dimensions(5, 4)
+Region_table
+barplot(Region_table, ylab = "count", xlab="Region", col="sky blue")
+```
+observation:other region has more records followed by Lisbon city, and finally Porto.
+## Bivariate Analysis
+we will use 
+```{r}
+head(data.num)
+```
 ```{r}
 for (i in 1:ncol(data.num)) {
-  data.num[, i] <- as.numeric(unlist(data.num[, i]))
+  for (j in 1:ncol(data.num)) {
+    if(i!=j){
+       plot(as.numeric(unlist(data.num[, j]))
+, as.numeric(unlist(data.num[, i]))
+, xlab = names(as.vector(data.num[, i]))
+, ylab = names(as.vector(data.num[, j])))
+    }
+  
+  }
+}
+#scatterplot 
+plot(customers_data$Fresh, customers_data$Grocery,main = "Fresh vs Grocery scatterplot", xlab = "Fresh", ylab = "Grocery"  )
+```
+observation: Most transactions are contrated at 0, meaning customers don't buy products.
+```{r}
+head(customers_df)
+```
+```{r}
+ggplot(customers_data, aes(Region, Milk)) +
+  geom_col()
+```
+```{r}
+for (i in 3:ncol(customers_data)) {
+  ggplot(customers_data, aes(Region, names(as.vector(customers_data[, i]))))+geom_col()
+  
 }
 ```
-
 ```{r}
-median(as.numeric(unlist(data.num[, 1])))
+library(ggplot2)
+ggplot(customers_data, aes(Region, names(as.vector(customers_data[, 3]))
+)) +
+  geom_col()
 ```
-
-
-
+#FEATURE SELECTION.
+ Filter Method
 ```{r}
-for (i in 1:ncol(data.num)) {
-  print(names(as.vector(data.num[, i])))
-  print(median(as.numeric(unlist(data.num[, i]))))
-  print("**************")
-}
+head(data.num)
+library(caret)
+library(corrplot)
+#correlation matrix
+wholesale.cor <- cor(data.num)
+highlycor <- findCorrelation(wholesale.cor, cutoff = 0.75)
+highlycor      #highly correlated variables
+#name of highly 
+names(data.num[, highlycor]) # Grocery
+#Removing Redundant Features
+df <- data.num[-highlycor]
+head(df)
+#comparing before and after 
+par(mfrow = c(1, 2))
+corrplot(wholesale.cor, order = "hclust")
+corrplot(cor(df), order = "hclust")
 ```
-
-
+### plotting correlation of the numerical variables..
 ```{r}
-getmode <- function(v) {
-   uniqv <- unique(v)
-   uniqv[which.max(tabulate(match(v, uniqv)))]
-}
+#install.packages("corrplot") 
+library(corrplot)
+#
+## Let’s build a correlation matrix to understand the relation between each attributes
+corrplot(cor(df), type = 'upper', method = 'number', tl.cex = 0.9)
 ```
-
+## clustering
+### k_mean clustering
+the dataset isn't that big, thus we will use k means method.
+### confirmating all the datatypes are numerical
 ```{r}
-for (i in 1:ncol(customers_data)) {
-  print(names(customers_data[, i]))
-  print(getmode(customers_data[, i]))
-}
-```
-
-```{r}
-# install.packages("matrixStats")
-library(matrixStats)
+str(df)
 ```
 ```{r}
-for (i in 1:ncol(data.num)) {
-  print(names(as.vector(data.num[, i])))
-  print(min(as.numeric(unlist(data.num[, i]))))
-  print("**************")
-}
+# dataset summary
+#
+summary(df)
 ```
-
-
+our dataset is in different dimension.we will scale it before we do clustering
 ```{r}
-for (i in 1:ncol(data.num)) {
-  print(names(as.vector(data.num[, i])))
-  print(max(as.numeric(unlist(data.num[, i]))))
-  print("**************")
-}
+# normalizing our dataset by use of scale function.
+#
+library(dplyr)
+df_Normalize <- as.data.frame(scale(df))
+#
+#previewing the scaled dataset.
+head(df_Normalize)
 ```
-
-
+observation: our data has been scaled and is now on the same scale.
+### getting the optimal clusters using elbow method.
+###installing the packages to be used
 ```{r}
-lapply(data.num,FUN=quantile)
+library(factoextra)
+library(cluster)
+library(gridExtra) # for grid.arrange
+library(dplyr)
 ```
-
+### elbow method
 ```{r}
-
-# Checking the range for all numeric columns
-
-lapply(data.num,FUN=range)
+# Determining Optimal clusters (k) Using Elbow method
+fviz_nbclust(x = df_Normalize,FUNcluster = kmeans, method = 'wss' )
 ```
-
+observation: elbow methods gives 2 as the optimal cluster, we will check other methods.
+### silhouette method
 ```{r}
-for (i in 1:ncol(data.num)) {
-  print(names(as.vector(data.num[, i])))
-  print(var(as.numeric(unlist(data.num[, i]))))
-  print("**************")
-}
+# Determining Optimal clusters (k) Using Average Silhouette Method
+fviz_nbclust(x = df_Normalize,FUNcluster = kmeans, method = 'silhouette' )
 ```
-
+observation; silhouette method chooses 3 as optimal cluster.
+There is another method called Gap-Static used for finding the optimal value of K.
 ```{r}
-for (i in 1:ncol(data.num)) {
-  print(names(as.vector(data.num[, i])))
-  print(sd(as.numeric(unlist(data.num[, i]))))
-  print("**************")
-}
+library(factoextra)
+library(cluster)
+# compute gap statistic
+set.seed(1234)
+gap_stat <- clusGap(x = df_Normalize, FUN = kmeans, K.max = 15, nstart = 25,iter.max=100)
+# Print the result
+print(gap_stat, method = "firstmax")
 ```
-
+#visualizing to get the optimal cluster
 ```{r}
-for (i in 1:ncol(data.num)) {
-  hist(as.numeric(unlist(data.num[, i])))
-}
+# plot the result to determine the optimal number of clusters.
+fviz_gap_stat(gap_stat)
 ```
-
-
-
-
-
-
+gap statistics method gives as 3 as the optimal cluster.
+```{r}
+# Compute k-means clustering with k = 2, optimal cluster
+set.seed(123)
+kmean_df <- kmeans(customers_data, centers = 3, nstart = 25)
+print(kmean_df)
+```
+We can visualize the results using the below code.
+```{r}
+library(factoextra)
+library(cluster)
+fviz_cluster(kmean_df, data = customers_data)
+```
+these are the 2 optimal clusters.
+```{r}
+head(kmean_df)
+```
+```{r}
+# Verifying the results of clustering
+# ---
+# 
+par(mfrow = c(2,2), mar = c(5,4,2,2))
+# Plotting to see how Sepal.Length and Sepal.Width data points have been distributed in clusters
+plot(customers_data[c(3,5)], col = kmean_df$cluster)
+plot(customers_data[c(4,5)], col = kmean_df$cluster)
+plot(customers_data[c(3,4)], col = kmean_df$cluster)
+plot(customers_data[c(5,6)], col = kmean_df$cluster)
+# Plotting to see how Sepal.Length and Sepal.Width data points have been distributed 
+# originally as per "class" attribute in dataset
+# ---
+```
+```{r}
+# showing how the clusters respond to the region variable
+table(kmean_df$cluster, customers_df$Region)
+```
+### We can extract the clusters and add to our initial data to do some descriptive statistics at the cluster level
+```{r}
+library(tidyr)
+#customers_df %>% 
+ # mutate(Cluster = kmean_df$cluster) %>%
+ # group_by(Cluster) %>%
+ # summarize_all('median')
+```
+```{r}
+# Cluster size
+kmean_df$size
+```
+### using pca
+## 4.0 Creating a dataset for PCA
+```{r}
+# Selecting the numerical data (excluding the categorical variables)
+# ---
+df_new<-customers_df[,c(3:8)]
+df_new
+# normalizing our dataset by use of scale function.
+#
+#library(dplyr)
+df_Norm <- as.data.frame(scale(df_new))
+#
+#previewing the scaled dataset.
+head(df_Norm)
+```
+```{r}
+#We then pass pca_numeric to the prcomp(). We also set one arguments, scale, 
+# to be TRUE then preview our object with summary
+pca_customer <- prcomp(df_new[,c(1:6)], center = TRUE, scale. = TRUE)
+summary(pca_customer)
+```
+### we can plot the principal components for visualization using plot(), and type.
+```{r}
+plot(pca_customer,type = 'l')
+```
+```{r}
+# Calling str() to have a look at your PCA object
+# ---
+# 
+str(pca_customer)
+```
+##visualizing our pca
+```{r}
+library(ggbiplot)
+# We will now plot our pca. This will provide us with some very useful insights i.e. 
+# which  are most similar to each other.
+ggbiplot(pca_customer, scale =0.4)
+```
+## selecting PC1 and PC2,PC3 for ploting
+```{r}
+#we want to include other colunms to be plotted as well
+pca_customer1 <- cbind(customers_df,pca_customer$x[,1:3])
+head(pca_customer1)
+```
+## plotting PC1 and PC2 to check the products by grouping based on gender.
+```{r}
+ggplot(pca_customer1,aes(PC1,PC2, col=Product.line,fill=Channel))+
+ stat_ellipse(geom = "polygon",col='green',alpha=1)+
+ geom_point(col='black',shape=24)
+```
+### Hierarchical clustering
+### Agglomerative Nesting (Hierarchical Clustering) using euclidean
+we will use the rescaled dataset df_Normalized for hierarchical clustering.
+```{r}
+head(df_Norm)
+``````
+```{r}
+library(cluster)
+# First we use the dist() function to compute the Euclidean distance between observations, 
+# res.hc will be the first argument in the hclust() function dissimilarity matrix
+# ---
+# first we compute the euclidean distance using euclidean metric
+eucl_dist<- dist(df_Norm, method = "euclidean")
+```
+```{r}
+# checking euclidean distance in matrix form 
+as.matrix(eucl_dist)[1:6, 1:6]
+```
+this is the euclidean distance of our dataset.
+```{r}
+# then we compute hierarchical clustering using the Ward method
+res_hcl <- hclust(eucl_dist, method =  "ward.D2")
+res_hcl
+```
+## we plot the dendogram
+```{r}
+# Lastly, we plot the obtained dendrogram
+# ---
+# 
+plot(res_hcl, cex = 0.6,  hang = -1)
+```
+###Cut the dendrogram into different groups
+```{r}
+#One of the problems with hierarchical clustering is that, it does not tell us how many clusters there #are, or where to cut the dendrogram to form clusters
+# Cut the tree visualizing
+# we will get 10 clusters
+fviz_dend(res_hcl, cex = 0.5, k = 3, rect = TRUE, color_labels_by_k = TRUE)
+```
+```{r}
+# Cut tree into 3 groups
+grp <- cutree(res_hcl, k = 3)
+head(grp, n = 3)
+```
+```{r}
+# Number of data points in each cluster
+table(grp)
+```
+### Agglomerative  (Hierarchical Clustering) using manhattan method
+```{r}
+# We now use the R function hclust() for hierarchical clustering
+# ---
+# 
+# First we use the dist() function to compute the Euclidean distance between observations, 
+# d will be the first argument in the hclust() function dissimilarity matrix
+# ---
+# first we compute the manhattan distance using manhattan metric
+#
+man_distance <-dist(df_Norm,method= "manhattan")
+```
+```{r}
+#
+as.matrix(man_distance)[1:6, 1:6]
+```
+```{r}
+# We then hierarchical clustering using the Ward's method
+# ---
+# 
+man_hc <- hclust(man_distance)
+man_hc
+```
+```{r}
+# Lastly, we plot the obtained dendrogram
+# ---
+# 
+plot(man_hc, cex = 0.6, hang = -1)
+```
+```{r}
+### Enhanced Visualization of Dendrogram
+# Cut the tree
+library(factoextra)
+library("ggplot2")
+fviz_dend(man_hc, cex = 0.5, k = 3,rect=TRUE, color_labels_by_k = TRUE)
+```
+```{r}
+# Number of data points in each cluster
+table(grp)
+```
+this is the number of data points when we use manhattan 
+conclusion: the methods of Agglomerate  hirarchy yields difference number of datapoints in each clusters.
+this is because euclidean uses squared errors where as manhattan looks at absolute values
