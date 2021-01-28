@@ -13,7 +13,6 @@ customers_data<-customers_data_2
 #checking the fist 6 rows of the dataset.
 head(customers_data)
 ```
-
 ### checking the bottom rows of the dataset
 ```{r}
 tail(customers_data)
@@ -80,49 +79,40 @@ for (i in 1:ncol(data.num)) {
   boxplot(data.num[, i], main=names(data.num[, i]))
 }
 ```
-observation: all variables has outlies. However we will not dop them as they look genuine.
+observation: all variables has outliers. However we will not drop them as they look genuine.
 ### renaming the rows of the channel, and region for analysis purpose.
 ```{r}
+#Renaming colunms for analysis purpose
+#
 library(caret)
 library(lattice)
-#customers_data$Channel <- as.factor(customers_data$Channel)
-#customers_data$Channel[customers_data$Channel == "1"] <- "restaurant"
-#customers_data$Channel[customers_data$Channel == "2"] <- "retail"
-```
-```{r}
-#customers_data$Region <- as.factor(customers_data$Region)
-#customers_data$Region[customers_data$Region == "1"] <- "Lisbon"
-#customers_data$Region[customers_data$Region == "2"] <- "Porto"
-#customers_data$Region[customers_data$Region == "3"] <- "Other region"
-```
-###renaming colunms for analysis purpose
-```{r}
 library(dplyr)
 customers_df$Channel <- with(customers_data,  factor(Channel, levels = c(1,2),labels = c("restaurant", "retail")))
 customers_df$Region <- with(customers_data,  factor(Region, levels = c(1,2,3), labels = c("Lisbon", "Porto", "Other region")))
+#
+#confirming the changes
 head(customers_df)
 ```
-### confirming the rowname changes.
-```{r}
-customers_df$Region
-```
+observation: we converted encoded variable to categorical variable.
 ###checking dataset summary after data cleaning
 ```{r}
 # getting the main summary
 summary(customers_df)
 ```
+the above shows the mean, median, max, and quantile for numerical variables and frequences for categorical variables.
 ##getting the dataset description
 ```{r}
 library(psych)
 describe(customers_df)
 ```
-observation: it gives us the a glimpse of the mean,variance,max and so on.
+observation: it gives us the a glimpse of the variance,mean,variance,max and so on.
 ## Univariate Analysis
 ### univariate Analysis for Numerical data
 ```{r}
-#preview of the numerical colunms
+#preview of the numerical columns
 #
 library(dplyr)    # alternatively, this also loads %>%
+data.num<- customers_df %>% select_if(is.numeric)
 head(data.num)
 ```
 ### previewing the numerical variables using histograms to check skewness.
@@ -136,37 +126,39 @@ library(ggplot2)
 #
 #note: the above  have been installed in the console section.
 ```
+## univariate analysis
+### 1. Numerical variables distribution
 ```{r}
 #visualizing the Fresh  colunm to check for skewness
 #
-qplot(data = customers_df, x = Fresh)
+qplot(data = data.num, x = Fresh)
 ```
 ```{r}
 #visualizing the milk colunm to check for skewness
 #
-qplot(data = customers_df, x = Milk,)
+qplot(data = data.num, x = Milk,)
 ```
 ```{r}
 #visualizing the grocery  colunm to check for skewness
 #
-qplot(data = customers_df, x = Grocery)
+qplot(data = data.num, x = Grocery)
 ```
 ```{r}
 #visualizing the Frozen  colunm to check for skewness
 #
-qplot(data = customers_df, x = Frozen)
+qplot(data = data.num, x = Frozen)
 ```
 ```{r}
 #visualizing the Detergents_Paper colunm to check for skewness
 #
-qplot(data = customers_df, x = Detergents_Paper)
+qplot(data = data.num, x = Detergents_Paper)
 ```
 ```{r}
 #visualizing the Delicassen  column to check for skewness
 #
-qplot(data = customers_data, x = Delicassen)
+qplot(data = data.num, x = Delicassen)
 ```
-observation: All our numerical variables have are positively skewed.
+Observation: All our numerical variables are positively skewed.This means the variable mean is greater than the mode.
 ### we can check skewness for numerical values at once as below
 ```{r}
 ## we can check skewness for numerical values at once as below
@@ -182,8 +174,8 @@ customers_df%>%
   labs(x="Values", y="Frequency") +
   theme_bw()
 ```
-observation: shows skewness to the right(positive skewness).
-### 4.1b univariate Analysis for categorical Data
+observation: shows skewness to the right(positive skewness meaning the tail on the right side is bigger than the left side).
+### 2.  univariate Analysis for categorical Data
 ```{r}
 ## Identifying the categorical class in the data 
 #
@@ -204,61 +196,60 @@ set_plot_dimensions <- function(width_choice, height_choice) {
 }
 ```
 ```{r}
-# barplot of Month
+# barplot for channel variable
 set_plot_dimensions(5, 4)
 Channel_table
 barplot(Channel_table, ylab = "count", xlab="Channel", col="dark red")
 ```
-observation: restaurant has more records compared to retail variable. 
+observation: restaurant has more sales compared to retail variable. 
 ```{r}
-# barplot of Month
+# barplot of the region representation.
 set_plot_dimensions(5, 4)
 Region_table
 barplot(Region_table, ylab = "count", xlab="Region", col="sky blue")
 ```
-observation:other region has more records followed by Lisbon city, and finally Porto.
+observation:other regions has more sales, followed by Lisbon city, and finally Porto.
 ## Bivariate Analysis
-we will use 
 ```{r}
+# previewing numerical data once again.
+#
 head(data.num)
 ```
+### plotting scatter plots for numerical data
 ```{r}
-for (i in 1:ncol(data.num)) {
-  for (j in 1:ncol(data.num)) {
-    if(i!=j){
+for (i in 1:(ncol(data.num)/2)) {
+  for (j in 4:ncol(data.num)) {
        plot(as.numeric(unlist(data.num[, j]))
 , as.numeric(unlist(data.num[, i]))
 , xlab = names(as.vector(data.num[, i]))
 , ylab = names(as.vector(data.num[, j])))
-    }
   
   }
 }
 #scatterplot 
-plot(customers_data$Fresh, customers_data$Grocery,main = "Fresh vs Grocery scatterplot", xlab = "Fresh", ylab = "Grocery"  )
 ```
-observation: Most transactions are contrated at 0, meaning customers don't buy products.
+observation: 
+1. milk,Grocery, Frozen, delicassen, Fresh and variables ar
 ```{r}
-head(customers_df)
+cor(data.num)
 ```
+### plotting correlation of the numerical variables.
 ```{r}
-ggplot(customers_data, aes(Region, Milk)) +
-  geom_col()
+#install.packages("corrplot") 
+library(corrplot)
+#
+## Let’s build a correlation matrix to understand the relation between each attributes
+corrplot(cor(data.num), type = 'upper', method = 'number', tl.cex = 0.9)
 ```
-```{r}
-for (i in 3:ncol(customers_data)) {
-  ggplot(customers_data, aes(Region, names(as.vector(customers_data[, i]))))+geom_col()
-  
-}
-```
-```{r}
-library(ggplot2)
-ggplot(customers_data, aes(Region, names(as.vector(customers_data[, 3]))
-)) +
-  geom_col()
-```
-#FEATURE SELECTION.
- Filter Method
+observation: There is a strong linear correlation between a couple of variables.
+1.Grocery and Detergent_papers have a high  positive correlation of 0.92. 
+2. Milk and Grocery have a high positive correlation of 0.73. 
+3. Detergent and Milk have a high positive correlated of 0.66, 
+3. Delicassen and Milk have a high positive correlation of 0.41.
+4. Frozen and Detergent_paper have a negative correlation of -0.13.
+## Clusting
+###FEATURE SELECTION.
+### 1. Filter Method
 ```{r}
 head(data.num)
 library(caret)
@@ -270,39 +261,43 @@ highlycor      #highly correlated variables
 #name of highly 
 names(data.num[, highlycor]) # Grocery
 #Removing Redundant Features
-df <- data.num[-highlycor]
-head(df)
+new_num <- data.num[-highlycor]
+head(new_num)
 #comparing before and after 
 par(mfrow = c(1, 2))
 corrplot(wholesale.cor, order = "hclust")
-corrplot(cor(df), order = "hclust")
+corrplot(cor(new_num), order = "hclust")
 ```
+observation: grocery variable is dropped since it has a high correlated with Detergent_paper, this is to reduce redundancy and dimensionality.
 ### plotting correlation of the numerical variables..
 ```{r}
 #install.packages("corrplot") 
 library(corrplot)
 #
 ## Let’s build a correlation matrix to understand the relation between each attributes
-corrplot(cor(df), type = 'upper', method = 'number', tl.cex = 0.9)
+corrplot(cor(new_num), type = 'upper', method = 'number', tl.cex = 0.9)
 ```
+Observation: now our there is no high correlation between variables after dropping the Grocery Variable.
 ## clustering
 ### k_mean clustering
 the dataset isn't that big, thus we will use k means method.
 ### confirmating all the datatypes are numerical
 ```{r}
-str(df)
+str(new_num)
 ```
+observation: variables have the right datatypes.
+### k-mean clustering
 ```{r}
 # dataset summary
 #
-summary(df)
+summary(new_num)
 ```
 our dataset is in different dimension.we will scale it before we do clustering
 ```{r}
 # normalizing our dataset by use of scale function.
 #
 library(dplyr)
-df_Normalize <- as.data.frame(scale(df))
+df_Normalize <- as.data.frame(scale(new_num))
 #
 #previewing the scaled dataset.
 head(df_Normalize)
@@ -316,18 +311,18 @@ library(cluster)
 library(gridExtra) # for grid.arrange
 library(dplyr)
 ```
-### elbow method
+### k-mean elbow method
 ```{r}
 # Determining Optimal clusters (k) Using Elbow method
 fviz_nbclust(x = df_Normalize,FUNcluster = kmeans, method = 'wss' )
 ```
 observation: elbow methods gives 2 as the optimal cluster, we will check other methods.
-### silhouette method
+### kmean silhouette method
 ```{r}
 # Determining Optimal clusters (k) Using Average Silhouette Method
 fviz_nbclust(x = df_Normalize,FUNcluster = kmeans, method = 'silhouette' )
 ```
-observation; silhouette method chooses 3 as optimal cluster.
+observation; silhouette method chooses 2 as optimal cluster.
 There is another method called Gap-Static used for finding the optimal value of K.
 ```{r}
 library(factoextra)
@@ -343,14 +338,15 @@ print(gap_stat, method = "firstmax")
 # plot the result to determine the optimal number of clusters.
 fviz_gap_stat(gap_stat)
 ```
-gap statistics method gives as 3 as the optimal cluster.
+gap statistics method gives as 1 as the optimal cluster.
 ```{r}
 # Compute k-means clustering with k = 2, optimal cluster
 set.seed(123)
-kmean_df <- kmeans(customers_data, centers = 3, nstart = 25)
+kmean_df <- kmeans(new_num, centers = 2, nstart = 25)
 print(kmean_df)
 ```
 We can visualize the results using the below code.
+### visualizing the kmeans clusters
 ```{r}
 library(factoextra)
 library(cluster)

@@ -247,31 +247,20 @@ for (i in 1:ncol(data.num)) {
 ```
 
 ![](wholesales_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-12-4.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-12-5.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-12-6.png)<!-- -->
-observation: all variables has outlies. However we will not dop them as
-they look genuine. \#\#\# renaming the rows of the channel, and region
-for analysis purpose.
+observation: all variables has outliers. However we will not drop them
+as they look genuine. \#\#\# renaming the rows of the channel, and
+region for analysis purpose.
 
 ``` r
+#Renaming colunms for analysis purpose
+#
 library(caret)
 library(lattice)
-#customers_data$Channel <- as.factor(customers_data$Channel)
-#customers_data$Channel[customers_data$Channel == "1"] <- "restaurant"
-#customers_data$Channel[customers_data$Channel == "2"] <- "retail"
-```
-
-``` r
-#customers_data$Region <- as.factor(customers_data$Region)
-#customers_data$Region[customers_data$Region == "1"] <- "Lisbon"
-#customers_data$Region[customers_data$Region == "2"] <- "Porto"
-#customers_data$Region[customers_data$Region == "3"] <- "Other region"
-```
-
-\#\#\#renaming colunms for analysis purpose
-
-``` r
 library(dplyr)
 customers_df$Channel <- with(customers_data,  factor(Channel, levels = c(1,2),labels = c("restaurant", "retail")))
 customers_df$Region <- with(customers_data,  factor(Region, levels = c(1,2,3), labels = c("Lisbon", "Porto", "Other region")))
+#
+#confirming the changes
 head(customers_df)
 ```
 
@@ -285,102 +274,7 @@ head(customers_df)
     ## 5 retail     Other region 22615  5410    7198   3915             1777       5185
     ## 6 retail     Other region  9413  8259    5126    666             1795       1451
 
-### confirming the rowname changes.
-
-``` r
-customers_df$Region
-```
-
-    ##   [1] Other region Other region Other region Other region Other region
-    ##   [6] Other region Other region Other region Other region Other region
-    ##  [11] Other region Other region Other region Other region Other region
-    ##  [16] Other region Other region Other region Other region Other region
-    ##  [21] Other region Other region Other region Other region Other region
-    ##  [26] Other region Other region Other region Other region Other region
-    ##  [31] Other region Other region Other region Other region Other region
-    ##  [36] Other region Other region Other region Other region Other region
-    ##  [41] Other region Other region Other region Other region Other region
-    ##  [46] Other region Other region Other region Other region Other region
-    ##  [51] Other region Other region Other region Other region Other region
-    ##  [56] Other region Other region Other region Other region Other region
-    ##  [61] Other region Other region Other region Other region Other region
-    ##  [66] Other region Other region Other region Other region Other region
-    ##  [71] Other region Other region Other region Other region Other region
-    ##  [76] Other region Other region Other region Other region Other region
-    ##  [81] Other region Other region Other region Other region Other region
-    ##  [86] Other region Other region Other region Other region Other region
-    ##  [91] Other region Other region Other region Other region Other region
-    ##  [96] Other region Other region Other region Other region Other region
-    ## [101] Other region Other region Other region Other region Other region
-    ## [106] Other region Other region Other region Other region Other region
-    ## [111] Other region Other region Other region Other region Other region
-    ## [116] Other region Other region Other region Other region Other region
-    ## [121] Other region Other region Other region Other region Other region
-    ## [126] Other region Other region Other region Other region Other region
-    ## [131] Other region Other region Other region Other region Other region
-    ## [136] Other region Other region Other region Other region Other region
-    ## [141] Other region Other region Other region Other region Other region
-    ## [146] Other region Other region Other region Other region Other region
-    ## [151] Other region Other region Other region Other region Other region
-    ## [156] Other region Other region Other region Other region Other region
-    ## [161] Other region Other region Other region Other region Other region
-    ## [166] Other region Other region Other region Other region Other region
-    ## [171] Other region Other region Other region Other region Other region
-    ## [176] Other region Other region Other region Other region Other region
-    ## [181] Other region Other region Other region Other region Other region
-    ## [186] Other region Other region Other region Other region Other region
-    ## [191] Other region Other region Other region Other region Other region
-    ## [196] Other region Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [201] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [206] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [211] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [216] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [221] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [226] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [231] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [236] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [241] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [246] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [251] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [256] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [261] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [266] Lisbon       Lisbon       Lisbon       Lisbon       Lisbon      
-    ## [271] Lisbon       Lisbon       Lisbon       Other region Other region
-    ## [276] Other region Other region Other region Other region Other region
-    ## [281] Other region Other region Other region Other region Other region
-    ## [286] Other region Other region Other region Other region Other region
-    ## [291] Other region Other region Other region Porto        Porto       
-    ## [296] Porto        Porto        Porto        Porto        Porto       
-    ## [301] Porto        Porto        Porto        Porto        Porto       
-    ## [306] Porto        Porto        Porto        Porto        Porto       
-    ## [311] Porto        Porto        Porto        Porto        Porto       
-    ## [316] Porto        Porto        Porto        Porto        Porto       
-    ## [321] Porto        Porto        Porto        Porto        Porto       
-    ## [326] Porto        Porto        Porto        Porto        Porto       
-    ## [331] Porto        Porto        Porto        Porto        Porto       
-    ## [336] Porto        Porto        Porto        Porto        Porto       
-    ## [341] Other region Other region Other region Other region Other region
-    ## [346] Other region Other region Other region Other region Other region
-    ## [351] Other region Other region Other region Other region Other region
-    ## [356] Other region Other region Other region Other region Other region
-    ## [361] Other region Other region Other region Other region Other region
-    ## [366] Other region Other region Other region Other region Other region
-    ## [371] Other region Other region Other region Other region Other region
-    ## [376] Other region Other region Other region Other region Other region
-    ## [381] Other region Other region Other region Other region Other region
-    ## [386] Other region Other region Other region Other region Other region
-    ## [391] Other region Other region Other region Other region Other region
-    ## [396] Other region Other region Other region Other region Other region
-    ## [401] Other region Other region Other region Other region Other region
-    ## [406] Other region Other region Other region Other region Other region
-    ## [411] Other region Other region Other region Other region Other region
-    ## [416] Other region Other region Other region Other region Other region
-    ## [421] Other region Other region Other region Other region Other region
-    ## [426] Other region Other region Other region Other region Other region
-    ## [431] Other region Other region Other region Other region Other region
-    ## [436] Other region Other region Other region Other region Other region
-    ## Levels: Lisbon Porto Other region
-
+observation: we converted encoded variable to categorical variable.
 \#\#\#checking dataset summary after data cleaning
 
 ``` r
@@ -403,7 +297,9 @@ summary(customers_df)
     ##  3rd Qu.:10656   3rd Qu.: 3554.2   3rd Qu.: 3922.0   3rd Qu.: 1820.2  
     ##  Max.   :92780   Max.   :60869.0   Max.   :40827.0   Max.   :47943.0
 
-\#\#getting the dataset description
+the above shows the mean, median, max, and quantile for numerical
+variables and frequences for categorical variables. \#\#getting the
+dataset description
 
 ``` r
 library(psych)
@@ -439,14 +335,15 @@ describe(customers_df)
     ## Detergents_Paper  40824  3.61    18.68 227.30
     ## Delicassen        47940 11.08   167.97 134.44
 
-observation: it gives us the a glimpse of the mean,variance,max and so
-on. \#\# Univariate Analysis \#\#\# univariate Analysis for Numerical
-data
+observation: it gives us the a glimpse of the variance,mean,variance,max
+and so on. \#\# Univariate Analysis \#\#\# univariate Analysis for
+Numerical data
 
 ``` r
-#preview of the numerical colunms
+#preview of the numerical columns
 #
 library(dplyr)    # alternatively, this also loads %>%
+data.num<- customers_df %>% select_if(is.numeric)
 head(data.num)
 ```
 
@@ -473,10 +370,44 @@ library(ggplot2)
 #note: the above  have been installed in the console section.
 ```
 
+## univariate analysis
+
+### 1\. Numerical variables distribution
+
 ``` r
 #visualizing the Fresh  colunm to check for skewness
 #
-qplot(data = customers_df, x = Fresh)
+qplot(data = data.num, x = Fresh)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](wholesales_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+``` r
+#visualizing the milk colunm to check for skewness
+#
+qplot(data = data.num, x = Milk,)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](wholesales_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+``` r
+#visualizing the grocery  colunm to check for skewness
+#
+qplot(data = data.num, x = Grocery)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](wholesales_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+``` r
+#visualizing the Frozen  colunm to check for skewness
+#
+qplot(data = data.num, x = Frozen)
 ```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
@@ -484,9 +415,9 @@ qplot(data = customers_df, x = Fresh)
 ![](wholesales_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 ``` r
-#visualizing the milk colunm to check for skewness
+#visualizing the Detergents_Paper colunm to check for skewness
 #
-qplot(data = customers_df, x = Milk,)
+qplot(data = data.num, x = Detergents_Paper)
 ```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
@@ -494,46 +425,17 @@ qplot(data = customers_df, x = Milk,)
 ![](wholesales_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ``` r
-#visualizing the grocery  colunm to check for skewness
+#visualizing the Delicassen  column to check for skewness
 #
-qplot(data = customers_df, x = Grocery)
+qplot(data = data.num, x = Delicassen)
 ```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](wholesales_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
-
-``` r
-#visualizing the Frozen  colunm to check for skewness
-#
-qplot(data = customers_df, x = Frozen)
-```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](wholesales_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
-
-``` r
-#visualizing the Detergents_Paper colunm to check for skewness
-#
-qplot(data = customers_df, x = Detergents_Paper)
-```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](wholesales_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
-
-``` r
-#visualizing the Delicassen  column to check for skewness
-#
-qplot(data = customers_data, x = Delicassen)
-```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](wholesales_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
-observation: All our numerical variables have are positively skewed.
-\#\#\# we can check skewness for numerical values at once as below
+Observation: All our numerical variables are positively skewed.This
+means the variable mean is greater than the mode. \#\#\# we can check
+skewness for numerical values at once as below
 
 ``` r
 ## we can check skewness for numerical values at once as below
@@ -562,8 +464,9 @@ customers_df%>%
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](wholesales_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
-observation: shows skewness to the right(positive skewness). \#\#\# 4.1b
+![](wholesales_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+observation: shows skewness to the right(positive skewness meaning the
+tail on the right side is bigger than the left side). \#\#\# 2.
 univariate Analysis for categorical Data
 
 ``` r
@@ -606,7 +509,7 @@ set_plot_dimensions <- function(width_choice, height_choice) {
 ```
 
 ``` r
-# barplot of Month
+# barplot for channel variable
 set_plot_dimensions(5, 4)
 Channel_table
 ```
@@ -619,11 +522,11 @@ Channel_table
 barplot(Channel_table, ylab = "count", xlab="Channel", col="dark red")
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
-observation: restaurant has more records compared to retail variable.
+![](wholesales_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+observation: restaurant has more sales compared to retail variable.
 
 ``` r
-# barplot of Month
+# barplot of the region representation.
 set_plot_dimensions(5, 4)
 Region_table
 ```
@@ -636,11 +539,13 @@ Region_table
 barplot(Region_table, ylab = "count", xlab="Region", col="sky blue")
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
-observation:other region has more records followed by Lisbon city, and
-finally Porto. \#\# Bivariate Analysis we will use
+![](wholesales_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+observation:other regions has more sales, followed by Lisbon city, and
+finally Porto. \#\# Bivariate Analysis
 
 ``` r
+# previewing numerical data once again.
+#
 head(data.num)
 ```
 
@@ -654,68 +559,71 @@ head(data.num)
     ## 5 22615  5410    7198   3915             1777       5185
     ## 6  9413  8259    5126    666             1795       1451
 
+### plotting scatter plots for numerical data
+
 ``` r
-for (i in 1:ncol(data.num)) {
-  for (j in 1:ncol(data.num)) {
-    if(i!=j){
+for (i in 1:(ncol(data.num)/2)) {
+  for (j in 4:ncol(data.num)) {
        plot(as.numeric(unlist(data.num[, j]))
 , as.numeric(unlist(data.num[, i]))
 , xlab = names(as.vector(data.num[, i]))
 , ylab = names(as.vector(data.num[, j])))
-    }
   
   }
 }
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-2.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-3.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-4.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-5.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-6.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-7.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-8.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-9.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-10.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-11.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-12.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-13.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-14.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-15.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-16.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-17.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-18.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-19.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-20.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-21.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-22.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-23.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-24.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-25.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-26.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-27.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-28.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-29.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-34-30.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-2.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-3.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-4.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-5.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-6.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-7.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-8.png)<!-- -->![](wholesales_files/figure-gfm/unnamed-chunk-31-9.png)<!-- -->
 
 ``` r
 #scatterplot 
-plot(customers_data$Fresh, customers_data$Grocery,main = "Fresh vs Grocery scatterplot", xlab = "Fresh", ylab = "Grocery"  )
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-34-31.png)<!-- -->
-observation: Most transactions are contrated at 0, meaning customers
-don’t buy products.
+observation: 1. milk,Grocery, Frozen, delicassen, Fresh and variables ar
 
 ``` r
-head(customers_df)
+cor(data.num)
 ```
 
-    ## # A tibble: 6 x 8
-    ##   Channel    Region       Fresh  Milk Grocery Frozen Detergents_Paper Delicassen
-    ##   <fct>      <fct>        <dbl> <dbl>   <dbl>  <dbl>            <dbl>      <dbl>
-    ## 1 retail     Other region 12669  9656    7561    214             2674       1338
-    ## 2 retail     Other region  7057  9810    9568   1762             3293       1776
-    ## 3 retail     Other region  6353  8808    7684   2405             3516       7844
-    ## 4 restaurant Other region 13265  1196    4221   6404              507       1788
-    ## 5 retail     Other region 22615  5410    7198   3915             1777       5185
-    ## 6 retail     Other region  9413  8259    5126    666             1795       1451
+    ##                        Fresh      Milk     Grocery      Frozen Detergents_Paper
+    ## Fresh             1.00000000 0.1005098 -0.01185387  0.34588146       -0.1019529
+    ## Milk              0.10050977 1.0000000  0.72833512  0.12399376        0.6618157
+    ## Grocery          -0.01185387 0.7283351  1.00000000 -0.04019274        0.9246407
+    ## Frozen            0.34588146 0.1239938 -0.04019274  1.00000000       -0.1315249
+    ## Detergents_Paper -0.10195294 0.6618157  0.92464069 -0.13152491        1.0000000
+    ## Delicassen        0.24468997 0.4063683  0.20549651  0.39094747        0.0692913
+    ##                  Delicassen
+    ## Fresh             0.2446900
+    ## Milk              0.4063683
+    ## Grocery           0.2054965
+    ## Frozen            0.3909475
+    ## Detergents_Paper  0.0692913
+    ## Delicassen        1.0000000
+
+### plotting correlation of the numerical variables.
 
 ``` r
-ggplot(customers_data, aes(Region, Milk)) +
-  geom_col()
+#install.packages("corrplot") 
+library(corrplot)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+    ## corrplot 0.84 loaded
 
 ``` r
-for (i in 3:ncol(customers_data)) {
-  ggplot(customers_data, aes(Region, names(as.vector(customers_data[, i]))))+geom_col()
-  
-}
+#
+## Let’s build a correlation matrix to understand the relation between each attributes
+corrplot(cor(data.num), type = 'upper', method = 'number', tl.cex = 0.9)
 ```
 
-``` r
-library(ggplot2)
-ggplot(customers_data, aes(Region, names(as.vector(customers_data[, 3]))
-)) +
-  geom_col()
-```
-
-![](wholesales_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
-\#FEATURE SELECTION. Filter Method
+![](wholesales_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+observation: There is a strong linear correlation between a couple of
+variables. 1.Grocery and Detergent\_papers have a high positive
+correlation of 0.92. 2. Milk and Grocery have a high positive
+correlation of 0.73. 3. Detergent and Milk have a high positive
+correlated of 0.66, 3. Delicassen and Milk have a high positive
+correlation of 0.41. 4. Frozen and Detergent\_paper have a negative
+correlation of -0.13. \#\# Clusting \#\#\#FEATURE SELECTION. \#\#\# 1.
+Filter Method
 
 ``` r
 head(data.num)
@@ -734,11 +642,6 @@ head(data.num)
 ``` r
 library(caret)
 library(corrplot)
-```
-
-    ## corrplot 0.84 loaded
-
-``` r
 #correlation matrix
 wholesale.cor <- cor(data.num)
 highlycor <- findCorrelation(wholesale.cor, cutoff = 0.75)
@@ -756,8 +659,8 @@ names(data.num[, highlycor]) # Grocery
 
 ``` r
 #Removing Redundant Features
-df <- data.num[-highlycor]
-head(df)
+new_num <- data.num[-highlycor]
+head(new_num)
 ```
 
     ## # A tibble: 6 x 5
@@ -774,27 +677,30 @@ head(df)
 #comparing before and after 
 par(mfrow = c(1, 2))
 corrplot(wholesale.cor, order = "hclust")
-corrplot(cor(df), order = "hclust")
+corrplot(cor(new_num), order = "hclust")
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-39-1.png)<!-- --> \#\#\#
-plotting correlation of the numerical variables..
+![](wholesales_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+observation: grocery variable is dropped since it has a high correlated
+with Detergent\_paper, this is to reduce redundancy and dimensionality.
+\#\#\# plotting correlation of the numerical variables..
 
 ``` r
 #install.packages("corrplot") 
 library(corrplot)
 #
 ## Let’s build a correlation matrix to understand the relation between each attributes
-corrplot(cor(df), type = 'upper', method = 'number', tl.cex = 0.9)
+corrplot(cor(new_num), type = 'upper', method = 'number', tl.cex = 0.9)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-40-1.png)<!-- --> \#\#
-clustering \#\#\# k\_mean clustering the dataset isn’t that big, thus we
-will use k means method. \#\#\# confirmating all the datatypes are
-numerical
+![](wholesales_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+Observation: now our there is no high correlation between variables
+after dropping the Grocery Variable. \#\# clustering \#\#\# k\_mean
+clustering the dataset isn’t that big, thus we will use k means method.
+\#\#\# confirmating all the datatypes are numerical
 
 ``` r
-str(df)
+str(new_num)
 ```
 
     ## tibble [440 x 5] (S3: tbl_df/tbl/data.frame)
@@ -815,10 +721,13 @@ str(df)
     ##   ..   Delicassen = col_double()
     ##   .. )
 
+observation: variables have the right datatypes. \#\#\# k-mean
+clustering
+
 ``` r
 # dataset summary
 #
-summary(df)
+summary(new_num)
 ```
 
     ##      Fresh             Milk           Frozen        Detergents_Paper 
@@ -843,7 +752,7 @@ clustering
 # normalizing our dataset by use of scale function.
 #
 library(dplyr)
-df_Normalize <- as.data.frame(scale(df))
+df_Normalize <- as.data.frame(scale(new_num))
 #
 #previewing the scaled dataset.
 head(df_Normalize)
@@ -883,24 +792,24 @@ library(gridExtra) # for grid.arrange
 library(dplyr)
 ```
 
-### elbow method
+### k-mean elbow method
 
 ``` r
 # Determining Optimal clusters (k) Using Elbow method
 fviz_nbclust(x = df_Normalize,FUNcluster = kmeans, method = 'wss' )
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 observation: elbow methods gives 2 as the optimal cluster, we will check
-other methods. \#\#\# silhouette method
+other methods. \#\#\# kmean silhouette method
 
 ``` r
 # Determining Optimal clusters (k) Using Average Silhouette Method
 fviz_nbclust(x = df_Normalize,FUNcluster = kmeans, method = 'silhouette' )
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-46-1.png)<!-- -->
-observation; silhouette method chooses 3 as optimal cluster. There is
+![](wholesales_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+observation; silhouette method chooses 2 as optimal cluster. There is
 another method called Gap-Static used for finding the optimal value of
 K.
 
@@ -942,52 +851,48 @@ print(gap_stat, method = "firstmax")
 fviz_gap_stat(gap_stat)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-48-1.png)<!-- --> gap
-statistics method gives as 3 as the optimal cluster.
+![](wholesales_files/figure-gfm/unnamed-chunk-43-1.png)<!-- --> gap
+statistics method gives as 1 as the optimal cluster.
 
 ``` r
 # Compute k-means clustering with k = 2, optimal cluster
 set.seed(123)
-kmean_df <- kmeans(customers_data, centers = 3, nstart = 25)
+kmean_df <- kmeans(new_num, centers = 2, nstart = 25)
 print(kmean_df)
 ```
 
-    ## K-means clustering with 3 clusters of sizes 330, 50, 60
+    ## K-means clustering with 2 clusters of sizes 376, 64
     ## 
     ## Cluster means:
-    ##    Channel   Region    Fresh      Milk   Grocery   Frozen Detergents_Paper
-    ## 1 1.260606 2.554545  8253.47  3824.603  5280.455 2572.661         1773.058
-    ## 2 1.960000 2.440000  8000.04 18511.420 27573.900 1996.680        12407.360
-    ## 3 1.133333 2.566667 35941.40  6044.450  6288.617 6713.967         1039.667
-    ##   Delicassen
-    ## 1   1137.497
-    ## 2   2252.020
-    ## 3   3049.467
+    ##       Fresh    Milk   Frozen Detergents_Paper Delicassen
+    ## 1  7962.609 5279.63 2477.753         3005.846   1228.902
+    ## 2 35721.719 8831.50 6562.734         2150.922   3263.688
     ## 
     ## Clustering vector:
-    ##   [1] 1 1 1 1 3 1 1 1 1 2 1 1 3 1 3 1 1 1 1 1 1 1 3 2 3 1 1 1 2 3 1 1 1 3 1 1 3
-    ##  [38] 1 2 3 3 1 1 2 1 2 2 2 1 2 1 1 3 1 3 1 2 1 1 1 1 2 1 1 1 2 1 1 1 1 1 1 1 1
-    ##  [75] 1 1 1 2 1 1 1 1 1 1 1 2 2 3 1 3 1 1 2 1 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 2 1
-    ## [112] 2 1 1 1 1 1 1 1 1 1 1 1 1 3 3 1 1 1 3 1 1 1 1 1 1 1 1 1 1 1 3 3 1 1 2 1 1
-    ## [149] 1 3 1 1 1 1 1 2 1 1 1 1 1 1 1 2 1 2 1 1 1 1 1 2 1 2 1 1 3 1 1 1 1 3 1 3 1
-    ## [186] 1 1 1 1 1 1 1 1 1 1 1 3 1 1 1 2 2 3 1 1 2 1 1 1 2 1 2 1 1 1 1 2 1 1 1 1 1
-    ## [223] 1 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 1 3 3 3 1 1 1 1 1 1 1 1 1 2 1 3 1 3 1 1 3
-    ## [260] 3 1 1 3 1 1 2 2 1 2 1 1 1 1 3 1 1 3 1 1 1 1 1 3 3 3 3 1 1 1 3 1 1 1 1 1 1
-    ## [297] 1 1 1 1 1 2 1 1 2 1 2 1 1 2 1 3 2 1 1 1 1 1 1 2 1 1 1 1 3 3 1 1 1 1 1 2 1
-    ## [334] 2 1 3 1 1 1 1 1 1 1 2 1 1 1 3 1 2 1 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-    ## [371] 3 1 1 1 1 1 1 3 1 1 3 1 3 1 2 1 1 1 1 1 1 1 1 3 1 1 1 1 1 1 1 3 3 3 1 1 3
-    ## [408] 2 1 1 1 1 1 1 1 1 1 1 2 1 1 1 3 1 1 1 1 3 1 1 1 1 1 1 1 3 3 2 1 1
+    ##   [1] 1 1 1 1 2 1 1 1 1 1 1 1 2 1 2 1 1 1 1 1 1 1 2 2 2 1 1 1 1 2 1 1 1 2 1 1 2
+    ##  [38] 1 1 2 2 1 1 1 1 1 1 2 1 1 1 1 2 1 2 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1
+    ##  [75] 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1
+    ## [112] 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 1 1
+    ## [149] 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 2 1 2 1
+    ## [186] 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    ## [223] 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 2 2 2 1 1 1 1 1 1 1 1 1 1 1 2 1 2 1 1 2
+    ## [260] 2 1 1 2 1 1 1 1 1 1 1 1 1 1 2 1 1 2 1 1 1 1 1 2 2 2 2 1 1 1 2 1 1 1 1 1 1
+    ## [297] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 1 1 1 1
+    ## [334] 1 1 2 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    ## [371] 2 1 1 1 1 1 1 2 1 1 2 1 2 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 2 2 2 1 1 2
+    ## [408] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 2 1 1 1 1 1 1 1 2 2 1 1 1
     ## 
     ## Within cluster sum of squares by cluster:
-    ## [1] 28184319111 26382784712 25765310355
-    ##  (between_SS / total_SS =  49.0 %)
+    ## [1] 39030411454 34907223610
+    ##  (between_SS / total_SS =  37.3 %)
     ## 
     ## Available components:
     ## 
     ## [1] "cluster"      "centers"      "totss"        "withinss"     "tot.withinss"
     ## [6] "betweenss"    "size"         "iter"         "ifault"
 
-We can visualize the results using the below code.
+We can visualize the results using the below code. \#\#\# visualizing
+the kmeans clusters
 
 ``` r
 library(factoextra)
@@ -995,7 +900,7 @@ library(cluster)
 fviz_cluster(kmean_df, data = customers_data)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-50-1.png)<!-- --> these
+![](wholesales_files/figure-gfm/unnamed-chunk-45-1.png)<!-- --> these
 are the 2 optimal clusters.
 
 ``` r
@@ -1003,40 +908,35 @@ head(kmean_df)
 ```
 
     ## $cluster
-    ##   [1] 1 1 1 1 3 1 1 1 1 2 1 1 3 1 3 1 1 1 1 1 1 1 3 2 3 1 1 1 2 3 1 1 1 3 1 1 3
-    ##  [38] 1 2 3 3 1 1 2 1 2 2 2 1 2 1 1 3 1 3 1 2 1 1 1 1 2 1 1 1 2 1 1 1 1 1 1 1 1
-    ##  [75] 1 1 1 2 1 1 1 1 1 1 1 2 2 3 1 3 1 1 2 1 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 2 1
-    ## [112] 2 1 1 1 1 1 1 1 1 1 1 1 1 3 3 1 1 1 3 1 1 1 1 1 1 1 1 1 1 1 3 3 1 1 2 1 1
-    ## [149] 1 3 1 1 1 1 1 2 1 1 1 1 1 1 1 2 1 2 1 1 1 1 1 2 1 2 1 1 3 1 1 1 1 3 1 3 1
-    ## [186] 1 1 1 1 1 1 1 1 1 1 1 3 1 1 1 2 2 3 1 1 2 1 1 1 2 1 2 1 1 1 1 2 1 1 1 1 1
-    ## [223] 1 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 1 3 3 3 1 1 1 1 1 1 1 1 1 2 1 3 1 3 1 1 3
-    ## [260] 3 1 1 3 1 1 2 2 1 2 1 1 1 1 3 1 1 3 1 1 1 1 1 3 3 3 3 1 1 1 3 1 1 1 1 1 1
-    ## [297] 1 1 1 1 1 2 1 1 2 1 2 1 1 2 1 3 2 1 1 1 1 1 1 2 1 1 1 1 3 3 1 1 1 1 1 2 1
-    ## [334] 2 1 3 1 1 1 1 1 1 1 2 1 1 1 3 1 2 1 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-    ## [371] 3 1 1 1 1 1 1 3 1 1 3 1 3 1 2 1 1 1 1 1 1 1 1 3 1 1 1 1 1 1 1 3 3 3 1 1 3
-    ## [408] 2 1 1 1 1 1 1 1 1 1 1 2 1 1 1 3 1 1 1 1 3 1 1 1 1 1 1 1 3 3 2 1 1
+    ##   [1] 1 1 1 1 2 1 1 1 1 1 1 1 2 1 2 1 1 1 1 1 1 1 2 2 2 1 1 1 1 2 1 1 1 2 1 1 2
+    ##  [38] 1 1 2 2 1 1 1 1 1 1 2 1 1 1 1 2 1 2 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1
+    ##  [75] 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1
+    ## [112] 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 1 1
+    ## [149] 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 2 1 2 1
+    ## [186] 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    ## [223] 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 2 2 2 1 1 1 1 1 1 1 1 1 1 1 2 1 2 1 1 2
+    ## [260] 2 1 1 2 1 1 1 1 1 1 1 1 1 1 2 1 1 2 1 1 1 1 1 2 2 2 2 1 1 1 2 1 1 1 1 1 1
+    ## [297] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 1 1 1 1
+    ## [334] 1 1 2 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    ## [371] 2 1 1 1 1 1 1 2 1 1 2 1 2 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 2 2 2 1 1 2
+    ## [408] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 2 1 1 1 1 1 1 1 2 2 1 1 1
     ## 
     ## $centers
-    ##    Channel   Region    Fresh      Milk   Grocery   Frozen Detergents_Paper
-    ## 1 1.260606 2.554545  8253.47  3824.603  5280.455 2572.661         1773.058
-    ## 2 1.960000 2.440000  8000.04 18511.420 27573.900 1996.680        12407.360
-    ## 3 1.133333 2.566667 35941.40  6044.450  6288.617 6713.967         1039.667
-    ##   Delicassen
-    ## 1   1137.497
-    ## 2   2252.020
-    ## 3   3049.467
+    ##       Fresh    Milk   Frozen Detergents_Paper Delicassen
+    ## 1  7962.609 5279.63 2477.753         3005.846   1228.902
+    ## 2 35721.719 8831.50 6562.734         2150.922   3263.688
     ## 
     ## $totss
-    ## [1] 157595857525
+    ## [1] 117949721617
     ## 
     ## $withinss
-    ## [1] 28184319111 26382784712 25765310355
+    ## [1] 39030411454 34907223610
     ## 
     ## $tot.withinss
-    ## [1] 80332414178
+    ## [1] 73937635063
     ## 
     ## $betweenss
-    ## [1] 77263443347
+    ## [1] 44012086554
 
 ``` r
 # Verifying the results of clustering
@@ -1050,7 +950,7 @@ plot(customers_data[c(3,4)], col = kmean_df$cluster)
 plot(customers_data[c(5,6)], col = kmean_df$cluster)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-52-1.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
 
 ``` r
 # Plotting to see how Sepal.Length and Sepal.Width data points have been distributed 
@@ -1065,9 +965,8 @@ table(kmean_df$cluster, customers_df$Region)
 
     ##    
     ##     Lisbon Porto Other region
-    ##   1     56    35          239
-    ##   2     10     8           32
-    ##   3     11     4           45
+    ##   1     66    43          267
+    ##   2     11     4           49
 
 ### We can extract the clusters and add to our initial data to do some descriptive statistics at the cluster level
 
@@ -1084,7 +983,7 @@ library(tidyr)
 kmean_df$size
 ```
 
-    ## [1] 330  50  60
+    ## [1] 376  64
 
 ### using pca
 
@@ -1149,7 +1048,7 @@ summary(pca_customer)
 plot(pca_customer,type = 'l')
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-58-1.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-53-1.png)<!-- -->
 
 ``` r
 # Calling str() to have a look at your PCA object
@@ -1219,7 +1118,7 @@ library(ggbiplot)
 ggbiplot(pca_customer, scale =0.4)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-60-1.png)<!-- --> \#\#
+![](wholesales_files/figure-gfm/unnamed-chunk-55-1.png)<!-- --> \#\#
 selecting PC1 and PC2,PC3 for ploting
 
 ``` r
@@ -1251,7 +1150,7 @@ ggplot(pca_customer1,aes(PC1,PC2, col=Product.line,fill=Channel))+
  geom_point(col='black',shape=24)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-62-1.png)<!-- --> \#\#\#
+![](wholesales_files/figure-gfm/unnamed-chunk-57-1.png)<!-- --> \#\#\#
 Hierarchical clustering \#\#\# Agglomerative Nesting (Hierarchical
 Clustering) using euclidean we will use the rescaled dataset
 df\_Normalized for hierarchical clustering.
@@ -1315,7 +1214,7 @@ res_hcl
 plot(res_hcl, cex = 0.6,  hang = -1)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-62-1.png)<!-- -->
 \#\#\#Cut the dendrogram into different groups
 
 ``` r
@@ -1325,7 +1224,7 @@ plot(res_hcl, cex = 0.6,  hang = -1)
 fviz_dend(res_hcl, cex = 0.5, k = 3, rect = TRUE, color_labels_by_k = TRUE)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-68-1.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-63-1.png)<!-- -->
 
 ``` r
 # Cut tree into 3 groups
@@ -1394,7 +1293,7 @@ man_hc
 plot(man_hc, cex = 0.6, hang = -1)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-74-1.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-69-1.png)<!-- -->
 
 ``` r
 ### Enhanced Visualization of Dendrogram
@@ -1404,7 +1303,7 @@ library("ggplot2")
 fviz_dend(man_hc, cex = 0.5, k = 3,rect=TRUE, color_labels_by_k = TRUE)
 ```
 
-![](wholesales_files/figure-gfm/unnamed-chunk-75-1.png)<!-- -->
+![](wholesales_files/figure-gfm/unnamed-chunk-70-1.png)<!-- -->
 
 ``` r
 # Number of data points in each cluster
