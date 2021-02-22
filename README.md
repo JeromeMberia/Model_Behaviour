@@ -8,7 +8,3 @@ Purchase region: Lisbon, Oporto or Other.
 
 Model Behaviour as a team will be looking to explore the dataset from Kaggle and use machine learning clustering models to make a customer segmentation.
 
-uououip
-
-we need to do this
-
